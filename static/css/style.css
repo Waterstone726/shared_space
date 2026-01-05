@@ -558,3 +558,39 @@ li.completed .task-text:not(.water-task-text) {
     border-radius: 8px;
     text-align: center;
 }
+
+/* --- 多用户热力图适配 --- */
+.user-heatmap-block {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+}
+
+.user-heatmap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+    padding: 0 5px;
+}
+
+.user-score-tag {
+    font-size: 10px;
+    color: #0969da;
+    background: #f1f8ff;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* 确保 JS 动态生成的月份栏也是相对定位 */
+.dynamic-months-row {
+    display: flex;
+    height: 15px;
+    position: relative;
+    font-size: 10px;
+    color: #57606a;
+    margin-bottom: 4px;
+}
