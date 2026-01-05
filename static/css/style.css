@@ -1,0 +1,560 @@
+:root {
+    --blue: #007bff;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --white: #fff;
+    --light-gray: #f0f2f5;
+    --text-color: #24292f;
+    --weather-bg: #4a90e2;
+    /* Github Colors */
+    --gh-bg: #ebedf0;
+    --gh-l1: #9be9a8;
+    --gh-l2: #40c463;
+    --gh-l3: #30a14e;
+    --gh-l4: #216e39;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--light-gray);
+    margin: 0;
+    padding: 20px;
+    padding-bottom: 100px;
+    color: var(--text-color);
+}
+
+.page-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* --- 左侧栏容器 --- */
+.left-sidebar {
+    flex: 0 0 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- 天气卡片 --- */
+.weather-card {
+    background: linear-gradient(160deg, var(--weather-bg), #0056b3);
+    color: white;
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 180px;
+    justify-content: center;
+}
+
+.weather-icon {
+    font-size: 48px;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.weather-temp {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.weather-detail {
+    font-size: 14px;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.weather-source {
+    margin-top: 15px;
+    font-size: 11px;
+    opacity: 0.6;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding-top: 8px;
+    width: 100%;
+}
+
+/* --- 贡献热力图卡片 --- */
+.contribution-card {
+    background: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    padding: 15px;
+    border: 1px solid #e1e4e8;
+}
+
+.contribution-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #57606a;
+}
+
+.contrib-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.contrib-btn {
+    background: none;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: 10px;
+    color: #57606a;
+}
+
+.contrib-btn:hover {
+    background-color: #f3f4f6;
+}
+
+
+/* 热力图布局 */
+.heatmap-container {
+    display: flex;
+    flex-direction: column;
+
+    /* 保持 flex-end！这是为了让上面的“月份”和下面的“网格”在内部保持对齐 */
+    align-items: flex-end;
+
+    /* --- 新增以下两行 --- */
+    /* 1. 让容器宽度不再是 100%，而是根据内容自适应 */
+    width: fit-content;
+
+    /* 2. 利用 margin auto 在父容器中水平居中 */
+    margin: 0 auto;
+}
+
+.months-row {
+    display: flex;
+    height: 15px;
+    width: auto;
+    position: relative;
+    font-size: 10px;
+    color: #57606a;
+    margin-bottom: 4px;
+}
+
+.month-label {
+    position: absolute;
+}
+
+.heatmap-body {
+    display: flex;
+    gap: 4px;
+}
+
+.week-days-col {
+    display: grid;
+    grid-template-rows: repeat(7, 10px);
+    gap: 2px;
+    margin-top: 0;
+    /* 对齐Grid */
+    font-size: 9px;
+    line-height: 10px;
+    color: #57606a;
+    text-align: right;
+    padding-right: 4px;
+}
+
+/* 隐藏不需要显示的星期标签 */
+.day-label-hidden {
+    visibility: hidden;
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-rows: repeat(7, 10px);
+    /* 7行: 周一到周日 */
+    grid-auto-flow: column;
+    /* 按列填充: 周 */
+    grid-auto-columns: 10px;
+    gap: 2px;
+}
+
+.day-cell {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: var(--gh-bg);
+    outline: 1px solid rgba(27, 31, 35, 0.06);
+    outline-offset: -1px;
+}
+
+.day-cell:hover {
+    outline: 1px solid rgba(0, 0, 0, 0.5);
+    z-index: 10;
+    cursor: pointer;
+}
+
+/* 颜色等级 */
+.level-0 {
+    background-color: var(--gh-bg);
+}
+
+.level-1 {
+    background-color: var(--gh-l1);
+}
+
+.level-2 {
+    background-color: var(--gh-l2);
+}
+
+.level-3 {
+    background-color: var(--gh-l3);
+}
+
+.level-4 {
+    background-color: var(--gh-l4);
+}
+
+.heatmap-footer {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #57606a;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+}
+
+.legend-box {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+/* --- 中间：任务区域 --- */
+.tasks-container {
+    flex: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 400px;
+}
+
+/* --- 右侧：留言板 --- */
+.right-sidebar {
+    flex: 1;
+    min-width: 250px;
+    position: sticky;
+    top: 20px;
+}
+
+.message-board {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+}
+
+.message-board h3 {
+    text-align: center;
+    padding: 15px;
+    margin: 0;
+    background: #f6f8fa;
+    color: var(--text-color);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid #d0d7de;
+    font-size: 14px;
+}
+
+/* --- 通用样式 --- */
+.user-column {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+
+.user-header {
+    padding: 15px;
+    color: var(--white);
+    font-weight: bold;
+    text-align: center;
+}
+
+.user-column-a .user-header {
+    background: var(--blue);
+}
+
+.user-column-a .time-slot-header {
+    border-bottom-color: var(--blue);
+}
+
+.user-column-b .user-header {
+    background: var(--pink);
+}
+
+.user-column-b .time-slot-header {
+    border-bottom-color: var(--pink);
+}
+
+.time-slot {
+    padding: 0 15px 15px 15px;
+}
+
+.time-slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 0;
+    border-bottom: 2px solid;
+    margin-bottom: 10px;
+}
+
+.time-slot-header h4 {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.toggle-icon::before {
+    content: '▼';
+    font-size: 12px;
+}
+
+.time-slot.collapsed .toggle-icon::before {
+    content: '▶';
+}
+
+.time-slot.collapsed .task-list-container {
+    display: none;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    background: #fdfdfd;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+li.completed .task-text:not(.water-task-text) {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.task-header {
+    display: flex;
+    align-items: center;
+}
+
+.task-controls {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.start-btn {
+    background: none;
+    border: 1px solid #28a745;
+    color: #28a745;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-header input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.task-text {
+    flex-grow: 1;
+    font-size: 14px;
+}
+
+.delete-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.task-meta {
+    font-size: 11px;
+    color: #666;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.daily-task {
+    padding: 5px 10px;
+    background-color: #f8f9fa;
+}
+
+.water-btn {
+    background: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.water-count {
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 12px;
+    color: var(--blue);
+}
+
+.messages {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.message .author {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.user-a {
+    color: var(--blue);
+}
+
+.user-b {
+    color: var(--pink);
+}
+
+.message .text {
+    background: #f1f1f1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    display: inline-block;
+    max-width: 90%;
+    word-break: break-word;
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.message .time {
+    font-size: 10px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.message-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.message-input input {
+    flex-grow: 1;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 6px;
+}
+
+.message-input button {
+    border: none;
+    background: #2da44e;
+    color: white;
+    padding: 6px 12px;
+    margin-left: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--white);
+    padding: 15px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.controls input,
+.controls select,
+.controls button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-box {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+}

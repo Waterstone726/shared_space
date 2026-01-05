@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>协作空间</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>请输入你的名字</h2>
+            <input id="usernameInput" type="text" placeholder="例如：张三" autofocus
+                onkeydown="if(event.key==='Enter') login()">
+            <button onclick="login()">进入</button>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+
+        <div class="left-sidebar">
+            <div id="weatherCard" class="weather-card" style="display:none;">
+                <div id="weatherIcon" class="weather-icon"></div>
+                <div id="weatherTemp" class="weather-temp">--°C</div>
+                <div id="weatherDesc" class="weather-detail">加载中...</div>
+                <div id="weatherCity" class="weather-source">南京</div>
+            </div>
+
+            <div class="contribution-card" id="contribCard">
+                <div class="contribution-header">
+                    <strong id="contribTitle">贡献概览</strong>
+                    <div class="contrib-controls">
+                        <button class="contrib-btn" onclick="moveHeatmap(-1)" title="查看更早">←</button>
+                        <button class="contrib-btn" onclick="moveHeatmap(1)" title="向后查看">→</button>
+                        <button class="contrib-btn" id="expandBtn" onclick="toggleHeatmapRange()">展开</button>
+                        <button class="contrib-btn" onclick="toggleHeatmapCollapse()">_</button>
+                    </div>
+                </div>
+
+                <div id="heatmapContent">
+                    <div class="heatmap-container">
+                        <div class="months-row" id="heatmapMonths"></div>
+                        <div class="heatmap-body">
+                            <div class="week-days-col">
+                                <div class="day-label-hidden">Sun</div>
+                                <div>Mon</div>
+                                <div class="day-label-hidden">Tue</div>
+                                <div>Wed</div>
+                                <div class="day-label-hidden">Thu</div>
+                                <div>Fri</div>
+                                <div class="day-label-hidden">Sat</div>
+                            </div>
+                            <div class="heatmap-grid" id="heatmapGrid"></div>
+                        </div>
+                    </div>
+                    <div class="heatmap-footer">
+                        <span>Less</span>
+                        <span class="legend-box level-0"></span>
+                        <span class="legend-box level-1"></span>
+                        <span class="legend-box level-2"></span>
+                        <span class="legend-box level-3"></span>
+                        <span class="legend-box level-4"></span>
+                        <span>More</span>
+                    </div>
+                    <div style="text-align:right; font-size:10px; margin-top:5px; color:#0969da;"
+                        id="todayScoreDisplay">今日: 0分</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainContainer" class="tasks-container"></div>
+
+        <div class="right-sidebar">
+            <div class="message-board">
+                <h3>💬 留言板</h3>
+                <div class="messages" id="messagesContainer"></div>
+                <div class="message-input">
+                    <input id="messageInput" type="text" placeholder="说点什么..."
+                        onkeydown="if(event.key==='Enter') postMessage()">
+                    <button onclick="postMessage()">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <input id="taskInput" type="text" placeholder="输入新任务...">
+        <select id="timeSlotSelect">
+            <option value="morning">上午</option>
+            <option value="afternoon">下午</option>
+            <option value="evening">晚上</option>
+        </select>
+        <button onclick="addTask()">添加任务</button>
+    </div>
+
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>
