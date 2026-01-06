@@ -100,9 +100,13 @@ async def websocket_endpoint(websocket: WebSocket, username: str = Query(...)):
 
     except WebSocketDisconnect:
         manager.disconnect(username)
+        # 【新增！】这一行非常重要：有人走了，立刻广播通知所有人更新状态
+        await manager.broadcast_state()
     except Exception as e:
         print(f"Error: {e}")
         manager.disconnect(username)
+        # 【新增！】出错断开时，也广播一下
+        await manager.broadcast_state()
 
 if __name__ == "__main__":
     import uvicorn

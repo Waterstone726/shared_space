@@ -1,6 +1,7 @@
 let ws;
 let username = '';
 const PROTOCOL = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+let onlineUsersList = []; // 【新增】用于存储从后端传来的在线名单
 
 // --- 天气功能 ---
 async function fetchWeather() {
@@ -78,6 +79,10 @@ function connectWs() {
 
     ws.onmessage = (event) => {
         const state = JSON.parse(event.data);
+        // 【新增】如果后端发来了在线名单，就更新本地变量
+        if (state.online_users) {
+            onlineUsersList = state.online_users;
+        }
         renderBoard(state.tasks_by_user || {});
         // 调用 charts.js 中的函数，并传入当前用户名
         if (typeof renderHeatmap === 'function') {
@@ -103,14 +108,37 @@ function renderBoard(tasksByUser) {
     const container = document.getElementById("mainContainer");
     container.innerHTML = "";
     const currentSlot = new Date().getHours() < 12 ? 'morning' : (new Date().getHours() < 18 ? 'afternoon' : 'evening');
-    let colorIndex = 0;
-    const colorClasses = ['user-column-a', 'user-column-b'];
+
+    // 1. 定义获取颜色的工具函数
+    const getColorClass = (name) => {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return (Math.abs(hash) % 2 === 0) ? 'user-column-a' : 'user-column-b';
+    };
+
     const todayStr = new Date().toISOString().split('T')[0];
 
     for (const user in tasksByUser) {
         const column = document.createElement("div");
-        column.className = `user-column ${colorClasses[colorIndex++ % 2]}`;
-        column.innerHTML = `<div class="user-header">${user}</div>`;
+
+        // 2. 计算在线状态
+        const isOnline = onlineUsersList.includes(user);
+        const offlineClass = isOnline ? '' : 'status-offline';
+        const statusIcon = isOnline ? '🟢' : '⚫';
+
+        // 3. 计算颜色 (使用名字哈希)
+        const userColorClass = getColorClass(user);
+
+        // 4. 【关键修复】只设置一次 className，不再引用不存在的 colorClasses 变量
+        column.className = `user-column ${userColorClass} ${offlineClass}`;
+
+        // 5. 设置头部 HTML
+        column.innerHTML = `<div class="user-header">
+                                ${user} 
+                                <span style="float:right; font-size:12px; margin-top:2px;">${statusIcon}</span>
+                            </div>`;
 
         const visibleTasks = tasksByUser[user].filter(t => {
             if (t.is_daily && t.id.includes(todayStr)) return true;
@@ -157,7 +185,6 @@ function renderBoard(tasksByUser) {
                     let metaHtml = '';
                     if (!task.is_daily) {
                         let scoreHtml = '';
-                        // getWorkScore 在 charts.js 中定义，确保加载顺序正确
                         if (task.completed && task.started_at && typeof getWorkScore === 'function') {
                             const s = getWorkScore(task);
                             scoreHtml = ` <span style='color:${s > 0 ? "#28a745" : "#d73a49"}'>[${s.toFixed(0)}分]</span>`;
